@@ -1,0 +1,50 @@
+{% extends 'website/base.html' %}
+{% load static %}
+
+{% block title %}Family Link - SafeGuard AI{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="{% static 'website/css/check_message.css' %}">{% endblock %}
+
+{% block content %}
+<section class="section section-family-link">
+    <div class="container container-wide">
+        <h1 class="page-title">Family Link</h1>
+        <p class="page-subtitle">Connect with a trusted Guardian. They'll be notified when we detect a high-risk threat.</p>
+
+        <div class="guardian-invite">
+            <h2>Invite a Guardian</h2>
+            <p>Send an SMS link to invite a family member or friend as your trusted contact. They'll receive alerts when you need help.</p>
+            <div class="invite-form">
+                <label for="guardian-phone">Guardian's phone number</label>
+                <input type="tel" id="guardian-phone" class="url-input" placeholder="+1 (555) 123-4567">
+                <button type="button" class="btn btn-primary" id="invite-btn">
+                    <span class="btn-icon">📱</span>
+                    <span>Send Invite Link</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="alert-trigger">
+            <h2>Alert Trusted Contact</h2>
+            <p>One-touch SOS button. Sends an automated message to your Guardian with scam details and a "Please check on me" request.</p>
+            <button type="button" class="btn btn-danger btn-large" id="alert-btn">
+                <span class="btn-icon">🆘</span>
+                <span>Alert Guardian Now</span>
+            </button>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.getElementById('invite-btn').addEventListener('click', function() {
+    const phone = document.getElementById('guardian-phone').value;
+    if (!phone.trim()) { alert('Please enter a phone number.'); return; }
+    alert('Invite link would be sent to ' + phone + '. (Demo mode)');
+});
+document.getElementById('alert-btn').addEventListener('click', function() {
+    if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
+    alert('Alert sent to your Guardian. They will check on you.');
+});
+</script>
+{% endblock %}

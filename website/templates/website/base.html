@@ -6,11 +6,21 @@
     <title>{% block title %}SafeGuard AI{% endblock %} | Youth & AI Innovation Summit 2026</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&display=swap" rel="stylesheet">
     {% load static %}
     <link rel="stylesheet" href="{% static 'website/css/style.css' %}">
+    {% block extra_css %}{% endblock %}
 </head>
 <body>
+    <div class="senior-mode-toggle" role="region" aria-label="Accessibility settings">
+        <label class="toggle-label" for="senior-mode-switch">
+            <span class="toggle-icon" aria-hidden="true">👁️</span>
+            <span>Senior Mode</span>
+        </label>
+        <button type="button" id="senior-mode-switch" class="toggle-switch" aria-pressed="false" aria-label="Toggle Senior Mode for larger buttons and high contrast">
+            <span class="toggle-track"><span class="toggle-thumb"></span></span>
+        </button>
+    </div>
     <header class="site-header">
         <nav class="nav-container">
             <a href="{% url 'home' %}" class="logo">
@@ -18,11 +28,12 @@
                 <span>SafeGuard AI</span>
             </a>
             <ul class="nav-links">
-                <li><a href="#problem">Problem</a></li>
-                <li><a href="#solution">Solution</a></li>
-                <li><a href="#features">Features</a></li>
-                <li><a href="#impact">Impact</a></li>
-                <li><a href="#roadmap">Roadmap</a></li>
+                <li><a href="{% url 'home' %}">Home</a></li>
+                <li><a href="{% url 'check_message' %}">Check Message</a></li>
+                <li><a href="{% url 'scam_academy' %}">Scam Academy</a></li>
+                <li><a href="{% url 'emergency_help' %}">I Need Help</a></li>
+                <li><a href="{% url 'family_link' %}">Family Link</a></li>
+                <li><a href="{% url 'official_verification' %}">Official Numbers</a></li>
             </ul>
         </nav>
     </header>
@@ -37,5 +48,13 @@
             <p class="footer-meta">Youth & AI Innovation Summit 2026 • Assistive Technology / Cybersecurity</p>
         </div>
     </footer>
+    <script>
+        document.getElementById('senior-mode-switch').addEventListener('click', function() {
+            const pressed = this.getAttribute('aria-pressed') === 'true';
+            this.setAttribute('aria-pressed', !pressed);
+            document.body.classList.toggle('senior-mode', !pressed);
+        });
+    </script>
+    {% block scripts %}{% endblock %}
 </body>
 </html>

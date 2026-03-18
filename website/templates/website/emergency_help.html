@@ -1,0 +1,53 @@
+{% extends 'website/base.html' %}
+{% load static %}
+
+{% block title %}I Need Help - SafeGuard AI{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="{% static 'website/css/check_message.css' %}">{% endblock %}
+
+{% block content %}
+<section class="section section-emergency">
+    <div class="container container-wide">
+        <h1 class="page-title">I Need Help</h1>
+        <p class="page-subtitle">If you think you've been scammed, choose the situation that matches yours. We'll guide you to the right help.</p>
+
+        <div class="emergency-cards">
+            <a href="https://www.consumer.ftc.gov/articles/how-recover-your-money-after-scam" target="_blank" rel="noopener" class="emergency-card">
+                <span class="card-icon" aria-hidden="true">🔑</span>
+                <h3>I gave my password</h3>
+                <p>Change your password immediately. Use our direct links to password reset tutorials for your accounts.</p>
+                <span class="card-action">Get help →</span>
+            </a>
+            <a href="tel:1-800-424-5400" class="emergency-card emergency-card-phone">
+                <span class="card-icon" aria-hidden="true">💰</span>
+                <h3>I sent money</h3>
+                <p>Call your bank's fraud department right away. We can connect you to major banks' fraud hotlines.</p>
+                <span class="card-action">Call bank fraud →</span>
+            </a>
+            <a href="tel:1-877-382-4357" class="emergency-card emergency-card-phone">
+                <span class="card-icon" aria-hidden="true">📞</span>
+                <h3>I feel overwhelmed</h3>
+                <p>24/7 connection to fraud hotlines and your trusted contact. You're not alone.</p>
+                <span class="card-action">Call FTC 1-877-382-4357 →</span>
+            </a>
+        </div>
+
+        <div class="sos-section">
+            <h2>Alert Trusted Contact</h2>
+            <p>One-touch SOS: Send an automated message to your Guardian with scam details and a "Please check on me" request.</p>
+            <button type="button" class="btn btn-danger btn-sos" id="sos-btn">
+                <span class="btn-icon" aria-hidden="true">🆘</span>
+                <span>Alert Trusted Contact</span>
+            </button>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.getElementById('sos-btn').addEventListener('click', function() {
+    if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
+    alert('SOS sent to your trusted contact. They will be notified to check on you.');
+});
+</script>
+{% endblock %}

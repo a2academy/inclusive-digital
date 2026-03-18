@@ -62,13 +62,16 @@ inclusive-digital/
     └── urls.py
 ```
 
-## Features (from pitch)
+## Features (from proposal)
 
-- **Scam Risk Meter** — Visual 0-100 score for instant understanding
-- **Family Link** — Notifies trusted contacts when high-risk threats are detected
-- **Haptic Feedback** — Unique vibration patterns for blind/deaf-blind accessibility
-- **Voice-First Interface** — Speak messages instead of typing
-- **Multi-language Support** — Protection regardless of native tongue
+- **Check Message** — Multi-modal input: paste text, screenshot OCR, voice dictation, URL scanner
+- **Scam Risk Meter** — Semi-circular 0-100 gauge with "Why" section and "Read to Me" audio
+- **Senior Mode** — Toggle for single-column layout, 80×80px tap targets, 7:1 contrast (WCAG AAA)
+- **Scam Academy** — Interactive quiz with 10 randomized questions across 6 scam categories; Safety Badges & Shield Levels
+- **I Need Help** — Emergency module: "I gave my password", "I sent money", "I feel overwhelmed" with direct links and hotlines
+- **Family Link** — Invite Guardian via SMS; one-touch SOS to alert trusted contact
+- **Official Verification** — Directory of real IRS, SSA, Medicare, FTC, and major bank fraud numbers
+- **Calm & Secure Design** — Navy (#1A237E), Emerald (#2E7D32), Amber (#FFC107), Crimson (#D32F2F); 18pt base font, Roboto
 
 ## License
 

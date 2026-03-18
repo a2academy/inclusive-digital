@@ -1,0 +1,59 @@
+{% extends 'website/base.html' %}
+{% load static %}
+
+{% block title %}Official Numbers - SafeGuard AI{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="{% static 'website/css/check_message.css' %}">{% endblock %}
+
+{% block content %}
+<section class="section section-official">
+    <div class="container container-wide">
+        <h1 class="page-title">Official Verification</h1>
+        <p class="page-subtitle">Real phone numbers for IRS, Social Security, and major banks. Call directly from this app—never use numbers from suspicious messages.</p>
+
+        <div class="official-list">
+            <div class="official-group">
+                <h2>Government</h2>
+                <ul>
+                    <li>
+                        <strong>IRS</strong>
+                        <a href="tel:1-800-829-1040" class="official-link">1-800-829-1040</a>
+                    </li>
+                    <li>
+                        <strong>Social Security</strong>
+                        <a href="tel:1-800-772-1213" class="official-link">1-800-772-1213</a>
+                    </li>
+                    <li>
+                        <strong>Medicare</strong>
+                        <a href="tel:1-800-633-4227" class="official-link">1-800-MEDICARE (633-4227)</a>
+                    </li>
+                    <li>
+                        <strong>FTC (Fraud)</strong>
+                        <a href="tel:1-877-382-4357" class="official-link">1-877-FTC-HELP (382-4357)</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="official-group">
+                <h2>Major Banks - Fraud Departments</h2>
+                <ul>
+                    <li>
+                        <strong>Chase</strong>
+                        <a href="tel:1-800-935-9935" class="official-link">1-800-935-9935</a>
+                    </li>
+                    <li>
+                        <strong>Bank of America</strong>
+                        <a href="tel:1-800-432-1000" class="official-link">1-800-432-1000</a>
+                    </li>
+                    <li>
+                        <strong>Wells Fargo</strong>
+                        <a href="tel:1-800-869-3557" class="official-link">1-800-869-3557</a>
+                    </li>
+                    <li>
+                        <strong>Citi</strong>
+                        <a href="tel:1-800-374-9700" class="official-link">1-800-374-9700</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,135 @@
+{% extends 'website/base.html' %}
+{% load static %}
+
+{% block title %}Scam Academy - SafeGuard AI{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="{% static 'website/css/check_message.css' %}">{% endblock %}
+
+{% block content %}
+<section class="section section-scam-academy">
+    <div class="container container-wide">
+        <h1 class="page-title">Scam Academy</h1>
+        <p class="page-subtitle">Test your scam-spotting skills. Earn Safety Badges and Shield Levels.</p>
+
+        <div class="quiz-categories">
+            <h3>6 Core Scam Categories</h3>
+            <ul class="category-list">
+                <li><span class="cat-badge">1</span> Phishing Emails</li>
+                <li><span class="cat-badge">2</span> SMS Scams</li>
+                <li><span class="cat-badge">3</span> Government Impersonation</li>
+                <li><span class="cat-badge">4</span> Prize & Lottery Scams</li>
+                <li><span class="cat-badge">5</span> Banking Fraud</li>
+                <li><span class="cat-badge">6</span> Romance Scams</li>
+            </ul>
+        </div>
+
+        <div class="quiz-start" id="quiz-start">
+            <button type="button" class="btn btn-primary btn-large" id="start-quiz-btn">
+                <span class="btn-icon">🛡️</span>
+                <span>Start Quiz</span>
+            </button>
+        </div>
+
+        <div class="quiz-area" id="quiz-area" hidden>
+            <div class="quiz-progress">
+                <span id="question-counter">Question 1 of 10</span>
+                <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+            </div>
+            <div class="quiz-question" id="quiz-question"></div>
+            <div class="quiz-options" id="quiz-options"></div>
+            <button type="button" class="btn btn-primary btn-next" id="next-btn" hidden>Next</button>
+        </div>
+
+        <div class="quiz-results" id="quiz-results" hidden>
+            <h2 class="results-title">Quiz Complete!</h2>
+            <div class="score-display">
+                <span class="score-value" id="score-value">0</span>
+                <span class="score-label">/ 10 correct</span>
+            </div>
+            <div class="badge-earned" id="badge-earned">
+                <span class="badge-icon">🏅</span>
+                <p>Safety Badge Earned!</p>
+            </div>
+            <p class="shield-level" id="shield-level">Shield Level: 1</p>
+            <button type="button" class="btn btn-primary" id="retry-btn">Try Again</button>
+        </div>
+    </div>
+</section>
+
+<script id="quiz-data" type="application/json">{{ quiz_json|safe }}</script>
+{% endblock %}
+
+{% block scripts %}
+<script>
+(function() {
+    const data = JSON.parse(document.getElementById('quiz-data').textContent);
+    const startBtn = document.getElementById('start-quiz-btn');
+    const quizStart = document.getElementById('quiz-start');
+    const quizArea = document.getElementById('quiz-area');
+    const quizResults = document.getElementById('quiz-results');
+    const questionEl = document.getElementById('quiz-question');
+    const optionsEl = document.getElementById('quiz-options');
+    const nextBtn = document.getElementById('next-btn');
+    const counterEl = document.getElementById('question-counter');
+    const progressFill = document.getElementById('progress-fill');
+
+    let current = 0;
+    let score = 0;
+    let answers = [];
+
+    function renderQuestion() {
+        const q = data[current];
+        questionEl.innerHTML = `<p class="question-text">${q.question}</p>`;
+        optionsEl.innerHTML = q.options.map((opt, i) =>
+            `<button type="button" class="quiz-option" data-correct="${opt.correct}" data-index="${i}">
+                <span class="option-letter">${opt.letter}</span>
+                <span>${opt.text}</span>
+            </button>`
+        ).join('');
+        counterEl.textContent = `Question ${current + 1} of ${data.length}`;
+        progressFill.style.width = `${((current + 1) / data.length) * 100}%`;
+        nextBtn.hidden = true;
+
+        optionsEl.querySelectorAll('.quiz-option').forEach(btn => {
+            btn.addEventListener('click', () => selectAnswer(btn));
+        });
+    }
+
+    function selectAnswer(btn) {
+        if (answers[current] !== undefined) return;
+        const correct = btn.dataset.correct === 'True' || btn.dataset.correct === 'true';
+        answers[current] = correct;
+        if (correct) score++;
+        btn.classList.add(correct ? 'correct' : 'wrong');
+        optionsEl.querySelectorAll('.quiz-option').forEach(b => b.disabled = true);
+        nextBtn.hidden = false;
+    }
+
+    function showResults() {
+        quizArea.hidden = true;
+        quizResults.hidden = false;
+        document.getElementById('score-value').textContent = score;
+        document.getElementById('shield-level').textContent = `Shield Level: ${Math.min(5, Math.floor(score / 2) + 1)}`;
+    }
+
+    startBtn.addEventListener('click', () => {
+        quizStart.hidden = true;
+        quizArea.hidden = false;
+        current = 0;
+        score = 0;
+        answers = [];
+        renderQuestion();
+    });
+
+    nextBtn.addEventListener('click', () => {
+        current++;
+        if (current >= data.length) showResults();
+        else renderQuestion();
+    });
+
+    document.getElementById('retry-btn').addEventListener('click', () => {
+        quizResults.hidden = true;
+        quizStart.hidden = false;
+    });
+})();
+</script>
+{% endblock %}

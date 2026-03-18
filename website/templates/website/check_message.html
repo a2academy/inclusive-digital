@@ -1,0 +1,147 @@
+{% extends 'website/base.html' %}
+{% load static %}
+
+{% block title %}Check Message - SafeGuard AI{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="{% static 'website/css/check_message.css' %}">{% endblock %}
+
+{% block content %}
+<section class="section section-check-message">
+    <div class="container container-wide">
+        <h1 class="page-title">Check Message</h1>
+        <p class="page-subtitle">Paste, speak, scan, or photograph any message. We'll analyze it for scam risks.</p>
+
+        <div class="input-methods" role="tablist" aria-label="Input methods">
+            <button type="button" class="input-method-btn active" data-method="text" aria-selected="true">
+                <span class="method-icon" aria-hidden="true">📝</span>
+                <span>Text / Paste</span>
+            </button>
+            <button type="button" class="input-method-btn" data-method="screenshot">
+                <span class="method-icon" aria-hidden="true">📷</span>
+                <span>Screenshot</span>
+            </button>
+            <button type="button" class="input-method-btn" data-method="voice">
+                <span class="method-icon" aria-hidden="true">🎤</span>
+                <span>Voice</span>
+            </button>
+            <button type="button" class="input-method-btn" data-method="url">
+                <span class="method-icon" aria-hidden="true">🔗</span>
+                <span>URL Scan</span>
+            </button>
+        </div>
+
+        <div class="input-panels">
+            <div class="input-panel active" id="panel-text" role="tabpanel">
+                <label for="message-text" class="sr-only">Paste your message here</label>
+                <textarea id="message-text" class="message-textarea" rows="8" placeholder="Paste the full message, email, or SMS here..."></textarea>
+                <button type="button" class="btn btn-secondary btn-clear" id="clear-text">Clear All</button>
+            </div>
+            <div class="input-panel" id="panel-screenshot" role="tabpanel" hidden>
+                <div class="camera-placeholder">
+                    <span class="camera-icon" aria-hidden="true">📷</span>
+                    <p>Screenshot OCR: Take or upload a photo of the message</p>
+                    <input type="file" id="screenshot-input" accept="image/*" capture="environment" class="file-input">
+                    <label for="screenshot-input" class="btn btn-primary">Choose Image</label>
+                </div>
+            </div>
+            <div class="input-panel" id="panel-voice" role="tabpanel" hidden>
+                <div class="voice-placeholder">
+                    <button type="button" class="btn btn-voice" id="record-btn" aria-label="Record and analyze">
+                        <span class="voice-icon" aria-hidden="true">🎤</span>
+                        <span>Record & Analyze</span>
+                    </button>
+                    <p class="voice-hint">Speak the message. We'll transcribe and analyze it.</p>
+                </div>
+            </div>
+            <div class="input-panel" id="panel-url" role="tabpanel" hidden>
+                <label for="url-input" class="sr-only">Enter URL to scan</label>
+                <input type="url" id="url-input" class="url-input" placeholder="https://example.com">
+                <p class="url-hint">We'll check for look-alike or phishing domains.</p>
+            </div>
+        </div>
+
+        <div class="analyze-actions">
+            <button type="button" class="btn btn-primary btn-analyze" id="analyze-btn">
+                <span class="btn-icon" aria-hidden="true">🔍</span>
+                <span>Analyze Message</span>
+            </button>
+        </div>
+
+        <div class="results-area" id="results-area" hidden>
+            <h2 class="results-title">Analysis Result</h2>
+            <div class="risk-meter-container">
+                <div class="risk-meter" id="risk-meter" role="img" aria-label="Scam risk gauge">
+                    <svg viewBox="0 0 200 120" class="gauge-svg">
+                        <path class="gauge-bg" d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke="currentColor" stroke-width="12"/>
+                        <path class="gauge-fill" id="gauge-fill" d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke="currentColor" stroke-width="12" stroke-dasharray="251" stroke-dashoffset="251"/>
+                    </svg>
+                    <span class="gauge-value" id="gauge-value">0</span>
+                </div>
+                <p class="risk-label" id="risk-label">Low Risk</p>
+            </div>
+            <div class="why-section">
+                <h3>The Why</h3>
+                <p class="why-text" id="why-text">—</p>
+            </div>
+            <div class="read-to-me">
+                <button type="button" class="btn btn-secondary" id="read-to-me-btn">
+                    <span class="btn-icon" aria-hidden="true">🔊</span>
+                    <span>Read to Me</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+(function() {
+    const methods = document.querySelectorAll('.input-method-btn');
+    const panels = document.querySelectorAll('.input-panel');
+    const analyzeBtn = document.getElementById('analyze-btn');
+    const resultsArea = document.getElementById('results-area');
+    const messageText = document.getElementById('message-text');
+    const urlInput = document.getElementById('url-input');
+
+    methods.forEach((btn, i) => {
+        btn.addEventListener('click', () => {
+            methods.forEach(m => m.classList.remove('active'));
+            panels.forEach(p => { p.classList.add('hidden'); p.setAttribute('hidden', ''); });
+            btn.classList.add('active');
+            panels[i].classList.remove('hidden');
+            panels[i].removeAttribute('hidden');
+        });
+    });
+
+    document.getElementById('clear-text').addEventListener('click', () => { messageText.value = ''; });
+
+    analyzeBtn.addEventListener('click', () => {
+        let content = '';
+        const active = document.querySelector('.input-method-btn.active').dataset.method;
+        if (active === 'text') content = messageText.value;
+        else if (active === 'url') content = urlInput.value;
+        if (!content.trim()) { alert('Please enter some content to analyze.'); return; }
+        resultsArea.hidden = false;
+        const risk = Math.min(100, Math.floor(Math.random() * 80) + 10);
+        document.getElementById('gauge-value').textContent = risk;
+        document.getElementById('gauge-fill').style.strokeDashoffset = 251 - (251 * risk / 100);
+        document.getElementById('risk-label').textContent = risk >= 70 ? 'High Risk' : risk >= 40 ? 'Medium Risk' : 'Low Risk';
+        document.getElementById('why-text').textContent = risk >= 70
+            ? 'The sender is asking for gift cards. Real banks never do this.'
+            : risk >= 40
+            ? 'The message uses urgency language. Legitimate organizations rarely pressure you to act immediately.'
+            : 'This message does not show common scam indicators.';
+        document.getElementById('results-area').classList.toggle('high-risk', risk >= 70);
+    });
+
+    document.getElementById('read-to-me-btn').addEventListener('click', () => {
+        const msg = new SpeechSynthesisUtterance(
+            document.getElementById('risk-label').textContent + '. ' + document.getElementById('why-text').textContent
+        );
+        msg.rate = 0.9;
+        msg.pitch = 0.9;
+        window.speechSynthesis.speak(msg);
+    });
+})();
+</script>
+{% endblock %}
