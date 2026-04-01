@@ -1,1 +1,2 @@
+# SafeGuard AI — Python web application (Django framework)
 Django>=5.0,<6.0

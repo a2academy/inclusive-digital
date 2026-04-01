@@ -1,5 +1,8 @@
 """
-Django settings for SafeGuard AI project.
+Django settings for SafeGuard AI.
+
+This project is a standard Django 5 application: manage.py, WSGI/ASGI, URL routing,
+templates under website/templates/, and static files under website/static/.
 """
 
 from pathlib import Path
