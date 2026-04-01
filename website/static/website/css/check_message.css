@@ -113,7 +113,92 @@
 
 .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0; }
 
-/* Scam Academy */
+/* Scam Academy — topic picker (large cards + icons) */
+.quiz-picker-title {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    margin: 0 0 1rem;
+    color: var(--color-primary);
+}
+
+.quiz-category-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.quiz-category-card {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+    padding: 1.25rem 1.25rem 1.5rem;
+    min-height: 120px;
+    border: 3px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    background: var(--color-bg-elevated);
+    cursor: pointer;
+    font: inherit;
+    color: var(--color-text);
+    transition: border-color 0.2s, box-shadow 0.2s, transform 0.15s;
+}
+
+.quiz-category-card:hover,
+.quiz-category-card:focus-visible {
+    border-color: var(--color-primary);
+    box-shadow: 0 8px 24px rgba(26, 35, 126, 0.12);
+    transform: translateY(-2px);
+    outline: none;
+}
+
+.quiz-cat-icon {
+    font-size: 2rem;
+    line-height: 1;
+    margin-bottom: 0.5rem;
+}
+
+.quiz-cat-label {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 0.35rem;
+    color: var(--color-primary);
+}
+
+.quiz-cat-hint {
+    font-size: 0.9375rem;
+    color: var(--color-text-muted);
+    line-height: 1.4;
+}
+
+.btn-back-topics {
+    margin-bottom: 1rem;
+}
+
+.quiz-topic-banner {
+    font-weight: 700;
+    color: var(--color-primary);
+    margin: 0 0 1rem;
+    font-size: 1.125rem;
+}
+
+.quiz-results-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 1rem;
+}
+
+body.senior-mode .quiz-category-card {
+    min-height: 140px;
+    padding: 1.5rem;
+}
+
+body.senior-mode .quiz-cat-label {
+    font-size: 1.375rem;
+}
+
+/* Scam Academy — legacy list */
 .quiz-categories { margin-bottom: 2rem; }
 .quiz-categories h3 { margin: 0 0 0.75rem; font-size: 1.125rem; }
 .category-list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 0.5rem; }

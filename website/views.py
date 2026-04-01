@@ -1,7 +1,7 @@
 import json
 from django.shortcuts import render
 
-from .quiz_data import get_quiz_questions
+from .quiz_data import get_quiz_by_category
 
 
 def home(request):
@@ -15,10 +15,10 @@ def check_message(request):
 
 
 def scam_academy(request):
-    """Interactive quiz with 6 scam categories."""
-    questions = get_quiz_questions(10)
-    quiz_json = json.dumps(questions)
-    return render(request, 'website/scam_academy.html', {'quiz_json': quiz_json})
+    """Interactive quiz: users pick a scam category, then answer questions for that topic."""
+    quiz_by_category = get_quiz_by_category()
+    quiz_by_category_json = json.dumps(quiz_by_category)
+    return render(request, 'website/scam_academy.html', {'quiz_by_category_json': quiz_by_category_json})
 
 
 def emergency_help(request):

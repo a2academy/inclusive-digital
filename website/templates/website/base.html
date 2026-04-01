@@ -42,9 +42,8 @@
         {% block content %}{% endblock %}
     </main>
 
-    <a href="{% url 'emergency_help' %}" class="floating-emergency-help" title="I need help now">
-        <span class="floating-emergency-icon" aria-hidden="true">🆘</span>
-        <span class="floating-emergency-text">Help</span>
+    <a href="{% url 'emergency_help' %}" class="floating-sos" title="Emergency help — I need help now" aria-label="SOS — Emergency help">
+        <span class="floating-sos-text">SOS</span>
     </a>
 
     <footer class="site-footer">

@@ -210,3 +210,27 @@ def get_quiz_questions(count=10):
         }
         result.append(item)
     return result
+
+
+def get_quiz_by_category(max_per_category=8):
+    """
+    Questions grouped by scam category for topic-first quiz selection.
+    Each category list is shuffled and capped for a focused session.
+    """
+    result = {}
+    for key, _label in SCAM_CATEGORIES:
+        pool = [q for q in QUIZ_POOL if q["category"] == key]
+        random.shuffle(pool)
+        pool = pool[: min(max_per_category, len(pool))]
+        items = []
+        for i, q in enumerate(pool):
+            items.append(
+                {
+                    "id": i,
+                    "category": q["category"],
+                    "question": q["question"],
+                    "options": _shuffle_option_letters(q["options"]),
+                }
+            )
+        result[key] = items
+    return result

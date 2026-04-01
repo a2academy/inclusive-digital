@@ -3,18 +3,83 @@
 {% block title %}SafeGuard AI - Inclusive Digital Protection{% endblock %}
 
 {% block content %}
-<section class="hero">
-    <div class="hero-badge">Youth & AI Innovation Summit 2026</div>
-    <h1 class="hero-title">SafeGuard AI</h1>
-    <p class="hero-subtitle">Inclusive Digital Protection for Seniors with Disabilities</p>
-    <p class="hero-category">Assistive Technology / Cybersecurity</p>
-    <p class="hero-audience">Target Audience: Elderly, Visually/Auditory Impaired, and Families</p>
-    <a href="{% url 'check_message' %}" class="btn btn-hero">Check a Message</a>
+<section class="home-hero hero-home-vibrant" aria-labelledby="home-hero-title">
+    <div class="home-hero-inner">
+        <div class="hero-badge">Youth & AI Innovation Summit 2026</div>
+        <h1 id="home-hero-title" class="hero-title">SafeGuard AI</h1>
+        <p class="hero-subtitle">Inclusive digital protection built for seniors—clear, colorful, and calm.</p>
+        <p class="hero-category">Assistive Technology · Cybersecurity</p>
+        <a href="{% url 'check_message' %}" class="btn btn-hero btn-hero-primary">Check a message</a>
+    </div>
+</section>
+
+<section class="home-quick-strip" aria-label="Quick actions">
+    <div class="container container-home-wide">
+        <h2 class="home-strip-heading">What do you want to do?</h2>
+        <div class="home-quick-grid">
+            <a href="{% url 'emergency_help' %}" class="home-quick-card home-quick-card--help">
+                <span class="home-quick-icon" aria-hidden="true">🆘</span>
+                <span class="home-quick-label">Get help</span>
+                <span class="home-quick-desc">Emergency steps &amp; hotlines</span>
+            </a>
+            <a href="{% url 'scam_academy' %}" class="home-quick-card home-quick-card--learn">
+                <span class="home-quick-icon" aria-hidden="true">📚</span>
+                <span class="home-quick-label">Learn</span>
+                <span class="home-quick-desc">Scam Academy quizzes</span>
+            </a>
+            <a href="{% url 'family_link' %}" class="home-quick-card home-quick-card--account">
+                <span class="home-quick-icon" aria-hidden="true">👪</span>
+                <span class="home-quick-label">Family</span>
+                <span class="home-quick-desc">Trusted contacts</span>
+            </a>
+        </div>
+    </div>
+</section>
+
+<section class="section home-section home-section--help" id="help">
+    <div class="container container-home-wide">
+        <div class="home-section-header">
+            <span class="home-section-tag">Help</span>
+            <h2 class="section-title home-section-title">When something feels wrong</h2>
+            <p class="home-section-lead">Blue means safety resources: report fraud, talk to someone, or get step-by-step recovery help.</p>
+        </div>
+        <ul class="home-link-list">
+            <li><a href="{% url 'emergency_help' %}">I need help right now</a></li>
+            <li><a href="{% url 'official_verification' %}">Official phone numbers (IRS, banks)</a></li>
+        </ul>
+    </div>
+</section>
+
+<section class="section home-section home-section--learn" id="learn">
+    <div class="container container-home-wide">
+        <div class="home-section-header">
+            <span class="home-section-tag">Learn</span>
+            <h2 class="section-title home-section-title">Practice spotting scams</h2>
+            <p class="home-section-lead">Green is for learning: pick a scam topic and answer at your own pace.</p>
+        </div>
+        <p class="home-section-body">
+            <a href="{% url 'scam_academy' %}" class="btn btn-hero btn-hero-learn">Open Scam Academy</a>
+        </p>
+    </div>
+</section>
+
+<section class="section home-section home-section--account" id="account">
+    <div class="container container-home-wide">
+        <div class="home-section-header">
+            <span class="home-section-tag">Family</span>
+            <h2 class="section-title home-section-title">Stay connected</h2>
+            <p class="home-section-lead">Orange highlights account and family: invite a guardian and keep trusted numbers handy.</p>
+        </div>
+        <ul class="home-link-list">
+            <li><a href="{% url 'family_link' %}">Family Link &amp; guardian</a></li>
+            <li><a href="{% url 'check_message' %}">Check a suspicious message</a></li>
+        </ul>
+    </div>
 </section>
 
 <section class="section section-executive" id="executive">
     <div class="container">
-        <h2 class="section-title">Executive Summary</h2>
+        <h2 class="section-title">Executive summary</h2>
         <p class="executive-summary">
             SafeGuard AI is an AI-powered security suite designed to bridge the digital safety gap
             for seniors and persons with disabilities. By combining real-time scam detection with
@@ -26,17 +91,17 @@
 
 <section class="section section-problem" id="problem">
     <div class="container">
-        <h2 class="section-title">The Problem</h2>
+        <h2 class="section-title">The problem</h2>
         <ul class="problem-list">
             <li>
-                <strong>The Victimization Gap:</strong> Seniors lost over $3.4 billion to fraud in 2023.
+                <strong>The victimization gap:</strong> Seniors lost over $3.4 billion to fraud in 2023.
             </li>
             <li>
-                <strong>Accessibility Barriers:</strong> Current security apps are too complex for seniors or lack
+                <strong>Accessibility barriers:</strong> Current security apps are too complex for seniors or lack
                 support for blind/deaf users.
             </li>
             <li>
-                <strong>Language Vulnerability:</strong> Non-English speaking seniors are often targeted due to a
+                <strong>Language vulnerability:</strong> Non-English speaking seniors are often targeted due to a
                 lack of localized protective tools.
             </li>
         </ul>
@@ -45,26 +110,26 @@
 
 <section class="section section-solution" id="solution">
     <div class="container">
-        <h2 class="section-title">The Solution: Key Innovation</h2>
+        <h2 class="section-title">The solution: key innovation</h2>
         <ul class="solution-list">
             <li>
                 <span class="solution-icon" aria-hidden="true">🧠</span>
                 <div>
-                    <strong>AI-Powered Analysis:</strong> Uses Natural Language Processing (NLP) to detect
+                    <strong>AI-powered analysis:</strong> Uses natural language processing to detect
                     urgency, fear tactics, and impersonation.
                 </div>
             </li>
             <li>
                 <span class="solution-icon" aria-hidden="true">🎤</span>
                 <div>
-                    <strong>Voice-First Interface:</strong> Users can speak messages into the app instead of typing,
+                    <strong>Voice-first interface:</strong> Users can speak messages into the app instead of typing,
                     facilitating ease of use for those with motor or visual impairments.
                 </div>
             </li>
             <li>
                 <span class="solution-icon" aria-hidden="true">🌐</span>
                 <div>
-                    <strong>Universal Safety:</strong> Multi-language detection and translation ensure protection
+                    <strong>Universal safety:</strong> Multi-language detection and translation ensure protection
                     regardless of the user's native tongue.
                 </div>
             </li>
@@ -74,7 +139,7 @@
 
 <section class="section section-features" id="features">
     <div class="container">
-        <h2 class="section-title">Technical Features</h2>
+        <h2 class="section-title">Technical features</h2>
         <div class="features-table-wrapper">
             <table class="features-table">
                 <thead>
@@ -85,24 +150,24 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <td>Scam Risk Meter</td>
-                        <td>Visual 0-100 score for instant understanding.</td>
+                        <td>Scam risk meter</td>
+                        <td>Visual 0–100 score for instant understanding.</td>
                     </tr>
                     <tr>
-                        <td>Family Link</td>
+                        <td>Family link</td>
                         <td>Notifies a trusted contact when a high-risk threat is detected.</td>
                     </tr>
                     <tr>
-                        <td>Haptic Feedback</td>
+                        <td>Haptic feedback</td>
                         <td>Unique vibration patterns for blind/deaf-blind accessibility.</td>
                     </tr>
                     <tr>
-                        <td>Official Verification</td>
+                        <td>Official verification</td>
                         <td>One-touch connection to verified bank/government phone numbers.</td>
                     </tr>
                     <tr>
-                        <td>Training Feature</td>
-                        <td>Sends messages randomly to test user to observe their readiness to identify scams.</td>
+                        <td>Training feature</td>
+                        <td>Practice quizzes by scam type to build confidence.</td>
                     </tr>
                 </tbody>
             </table>
@@ -112,10 +177,10 @@
 
 <section class="section section-impact" id="impact">
     <div class="container">
-        <h2 class="section-title">Social Impact & Market Potential</h2>
+        <h2 class="section-title">Social impact &amp; market potential</h2>
         <ul class="impact-list">
-            <li><strong>Financial Safety:</strong> Direct reduction in scam victimization rates.</li>
-            <li><strong>Digital Confidence:</strong> Reducing the "fear factor" of technology for elderly users.</li>
+            <li><strong>Financial safety:</strong> Direct reduction in scam victimization rates.</li>
+            <li><strong>Digital confidence:</strong> Reducing the "fear factor" of technology for elderly users.</li>
             <li><strong>Scalability:</strong> Potential partnerships with senior living communities, banks, and disability advocacy groups.</li>
         </ul>
     </div>
@@ -123,7 +188,7 @@
 
 <section class="section section-roadmap" id="roadmap">
     <div class="container">
-        <h2 class="section-title">Project Roadmap</h2>
+        <h2 class="section-title">Project roadmap</h2>
         <div class="roadmap-timeline">
             <div class="roadmap-phase">
                 <span class="phase-number">Phase 1</span>
@@ -131,7 +196,7 @@
             </div>
             <div class="roadmap-phase">
                 <span class="phase-number">Phase 2</span>
-                <p>Integration of Voice-to-Text and Multi-language support.</p>
+                <p>Integration of voice-to-text and multi-language support.</p>
             </div>
             <div class="roadmap-phase">
                 <span class="phase-number">Phase 3</span>
