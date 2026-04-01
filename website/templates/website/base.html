@@ -6,7 +6,7 @@
     <title>{% block title %}SafeGuard AI{% endblock %} | Youth & AI Innovation Summit 2026</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&family=Roboto+Slab:wght@600;700&display=swap" rel="stylesheet">
     {% load static %}
     <link rel="stylesheet" href="{% static 'website/css/style.css' %}">
     {% block extra_css %}{% endblock %}
@@ -42,6 +42,11 @@
         {% block content %}{% endblock %}
     </main>
 
+    <a href="{% url 'emergency_help' %}" class="floating-emergency-help" title="I need help now">
+        <span class="floating-emergency-icon" aria-hidden="true">🆘</span>
+        <span class="floating-emergency-text">Help</span>
+    </a>
+
     <footer class="site-footer">
         <div class="footer-content">
             <p>SafeGuard AI — Inclusive Digital Protection for Seniors with Disabilities</p>
@@ -49,11 +54,19 @@
         </div>
     </footer>
     <script>
-        document.getElementById('senior-mode-switch').addEventListener('click', function() {
-            const pressed = this.getAttribute('aria-pressed') === 'true';
-            this.setAttribute('aria-pressed', !pressed);
-            document.body.classList.toggle('senior-mode', !pressed);
-        });
+        (function() {
+            var btn = document.getElementById('senior-mode-switch');
+            if (localStorage.getItem('safeguardSeniorMode') === '1') {
+                btn.setAttribute('aria-pressed', 'true');
+                document.body.classList.add('senior-mode');
+            }
+            btn.addEventListener('click', function() {
+                var pressed = this.getAttribute('aria-pressed') === 'true';
+                this.setAttribute('aria-pressed', !pressed);
+                document.body.classList.toggle('senior-mode', !pressed);
+                localStorage.setItem('safeguardSeniorMode', !pressed ? '1' : '0');
+            });
+        })();
     </script>
     {% block scripts %}{% endblock %}
 </body>

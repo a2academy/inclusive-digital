@@ -8,46 +8,39 @@
 <section class="section section-emergency">
     <div class="container container-wide">
         <h1 class="page-title">I Need Help</h1>
-        <p class="page-subtitle">If you think you've been scammed, choose the situation that matches yours. We'll guide you to the right help.</p>
+        <p class="page-subtitle">If you think you've been scammed, use these <strong>official U.S. government</strong> and phone resources only. Do not trust links from strangers or suspicious messages.</p>
 
         <div class="emergency-cards">
-            <a href="https://www.consumer.ftc.gov/articles/how-recover-your-money-after-scam" target="_blank" rel="noopener" class="emergency-card">
+            <a href="https://www.identitytheft.gov/" target="_blank" rel="noopener noreferrer" class="emergency-card">
                 <span class="card-icon" aria-hidden="true">🔑</span>
                 <h3>I gave my password</h3>
-                <p>Change your password immediately. Use our direct links to password reset tutorials for your accounts.</p>
-                <span class="card-action">Get help →</span>
+                <p>Change passwords immediately. identitytheft.gov is the official U.S. government site for identity theft and compromised accounts.</p>
+                <span class="card-action">Go to IdentityTheft.gov (official) →</span>
             </a>
-            <a href="tel:1-800-424-5400" class="emergency-card emergency-card-phone">
+            <a href="{% url 'official_verification' %}" class="emergency-card">
                 <span class="card-icon" aria-hidden="true">💰</span>
                 <h3>I sent money</h3>
-                <p>Call your bank's fraud department right away. We can connect you to major banks' fraud hotlines.</p>
-                <span class="card-action">Call bank fraud →</span>
+                <p>Call your bank using the number on your card or statement—not from a text or email. We list official bank fraud numbers on the next page.</p>
+                <span class="card-action">Official bank &amp; agency numbers →</span>
             </a>
-            <a href="tel:1-877-382-4357" class="emergency-card emergency-card-phone">
+            <a href="https://reportfraud.ftc.gov/" target="_blank" rel="noopener noreferrer" class="emergency-card">
                 <span class="card-icon" aria-hidden="true">📞</span>
-                <h3>I feel overwhelmed</h3>
-                <p>24/7 connection to fraud hotlines and your trusted contact. You're not alone.</p>
-                <span class="card-action">Call FTC 1-877-382-4357 →</span>
+                <h3>I feel overwhelmed or need to report fraud</h3>
+                <p>ReportFraud.ftc.gov is the Federal Trade Commission's official fraud reporting site. For phone support, call the FTC below.</p>
+                <span class="card-action">ReportFraud.ftc.gov →</span>
             </a>
         </div>
+
+        <p class="emergency-footnote">Phone: <a href="tel:1-877-382-4357" class="official-link">1-877-FTC-HELP (1-877-382-4357)</a> — Federal Trade Commission. For crisis support, call or text <a href="tel:988" class="official-link">988</a> (Suicide &amp; Crisis Lifeline).</p>
 
         <div class="sos-section">
             <h2>Alert Trusted Contact</h2>
-            <p>One-touch SOS: Send an automated message to your Guardian with scam details and a "Please check on me" request.</p>
-            <button type="button" class="btn btn-danger btn-sos" id="sos-btn">
-                <span class="btn-icon" aria-hidden="true">🆘</span>
-                <span>Alert Trusted Contact</span>
-            </button>
+            <p>To send alerts, you must add a Guardian in Family Link first. We do not send messages without a contact you set up.</p>
+            <a href="{% url 'family_link' %}" class="btn btn-danger btn-sos">
+                <span class="btn-icon" aria-hidden="true">🔔</span>
+                <span>Set up Family Link &amp; Guardian</span>
+            </a>
         </div>
     </div>
 </section>
-{% endblock %}
-
-{% block scripts %}
-<script>
-document.getElementById('sos-btn').addEventListener('click', function() {
-    if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
-    alert('SOS sent to your trusted contact. They will be notified to check on you.');
-});
-</script>
 {% endblock %}

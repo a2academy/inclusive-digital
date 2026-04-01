@@ -40,11 +40,16 @@
 document.getElementById('invite-btn').addEventListener('click', function() {
     const phone = document.getElementById('guardian-phone').value;
     if (!phone.trim()) { alert('Please enter a phone number.'); return; }
-    alert('Invite link would be sent to ' + phone + '. (Demo mode)');
+    alert('This browser demo cannot send SMS. Save this number and call or text your Guardian yourself from your phone app. A production app would send an invite link.');
 });
 document.getElementById('alert-btn').addEventListener('click', function() {
+    const phone = document.getElementById('guardian-phone').value;
+    if (!phone.trim()) {
+        alert('Add a Guardian phone number above first (or contact someone you trust by phone). This demo does not send messages automatically.');
+        return;
+    }
     if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
-    alert('Alert sent to your Guardian. They will check on you.');
+    alert('This demo does not send SMS. Call your Guardian at the number you entered, or use your phone\'s messaging app to reach them.');
 });
 </script>
 {% endblock %}

@@ -163,16 +163,50 @@ QUIZ_POOL = [
 ]
 
 
+def _shuffle_option_letters(options_raw):
+    """Shuffle order so the correct answer is not always B; reassign A–D."""
+    opts = [{"letter": o[0], "text": o[1], "correct": o[2]} for o in options_raw]
+    random.shuffle(opts)
+    letters = ["A", "B", "C", "D"]
+    for i, o in enumerate(opts):
+        o["letter"] = letters[i]
+    return opts
+
+
 def get_quiz_questions(count=10):
-    """Return `count` randomized questions from the pool."""
-    shuffled = random.sample(QUIZ_POOL, min(count, len(QUIZ_POOL)))
+    """
+    Build a quiz with up to `count` questions.
+    Ensures at least one question from each of the 6 scam categories when the pool allows,
+    then fills remaining slots from the rest of the pool.
+    """
+    categories = ["phishing", "sms", "government", "prize", "banking", "romance"]
+    picked = []
+    picked_ids = set()
+
+    for cat in categories:
+        pool = [q for q in QUIZ_POOL if q["category"] == cat]
+        if pool:
+            choice = random.choice(pool)
+            picked.append(choice)
+            picked_ids.add(id(choice))
+
+    rest = [q for q in QUIZ_POOL if id(q) not in picked_ids]
+    random.shuffle(rest)
+    for q in rest:
+        if len(picked) >= count:
+            break
+        picked.append(q)
+
+    random.shuffle(picked)
+    picked = picked[: min(count, len(picked))]
+
     result = []
-    for i, q in enumerate(shuffled):
+    for i, q in enumerate(picked):
         item = {
             "id": i,
             "category": q["category"],
             "question": q["question"],
-            "options": [{"letter": o[0], "text": o[1], "correct": o[2]} for o in q["options"]],
+            "options": _shuffle_option_letters(q["options"]),
         }
         result.append(item)
     return result

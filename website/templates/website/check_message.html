@@ -38,24 +38,30 @@
             <div class="input-panel" id="panel-screenshot" role="tabpanel" hidden>
                 <div class="camera-placeholder">
                     <span class="camera-icon" aria-hidden="true">📷</span>
-                    <p>Screenshot OCR: Take or upload a photo of the message</p>
+                    <p>Upload a photo of a text message or email. We read the text on your device (OCR).</p>
                     <input type="file" id="screenshot-input" accept="image/*" capture="environment" class="file-input">
                     <label for="screenshot-input" class="btn btn-primary">Choose Image</label>
+                    <div id="ocr-preview-wrap" class="ocr-preview-wrap" hidden>
+                        <img id="ocr-preview" alt="Screenshot preview" class="ocr-preview">
+                    </div>
+                    <p id="ocr-status" class="ocr-status" role="status" aria-live="polite"></p>
                 </div>
             </div>
             <div class="input-panel" id="panel-voice" role="tabpanel" hidden>
                 <div class="voice-placeholder">
-                    <button type="button" class="btn btn-voice" id="record-btn" aria-label="Record and analyze">
+                    <button type="button" class="btn btn-voice" id="record-btn" aria-pressed="false" aria-label="Start or stop voice recording">
                         <span class="voice-icon" aria-hidden="true">🎤</span>
-                        <span>Record & Analyze</span>
+                        <span id="record-btn-label">Record & Analyze</span>
                     </button>
-                    <p class="voice-hint">Speak the message. We'll transcribe and analyze it.</p>
+                    <p class="voice-hint" id="voice-hint">Speak the message clearly. Text appears below; tap Analyze when done.</p>
+                    <label for="voice-transcript" class="sr-only">Transcribed text</label>
+                    <textarea id="voice-transcript" class="message-textarea" rows="4" placeholder="Transcription will appear here…" readonly></textarea>
                 </div>
             </div>
             <div class="input-panel" id="panel-url" role="tabpanel" hidden>
                 <label for="url-input" class="sr-only">Enter URL to scan</label>
                 <input type="url" id="url-input" class="url-input" placeholder="https://example.com">
-                <p class="url-hint">We'll check for look-alike or phishing domains.</p>
+                <p class="url-hint">We'll check for look-alike or phishing patterns in the address.</p>
             </div>
         </div>
 
@@ -80,7 +86,7 @@
             </div>
             <div class="why-section">
                 <h3>The Why</h3>
-                <p class="why-text" id="why-text">—</p>
+                <ul class="why-list" id="why-list"></ul>
             </div>
             <div class="read-to-me">
                 <button type="button" class="btn btn-secondary" id="read-to-me-btn">
@@ -94,6 +100,8 @@
 {% endblock %}
 
 {% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+<script src="{% static 'website/js/scam_analyzer.js' %}"></script>
 <script>
 (function() {
     const methods = document.querySelectorAll('.input-method-btn');
@@ -102,6 +110,9 @@
     const resultsArea = document.getElementById('results-area');
     const messageText = document.getElementById('message-text');
     const urlInput = document.getElementById('url-input');
+    const voiceTranscript = document.getElementById('voice-transcript');
+    const gaugeFill = document.getElementById('gauge-fill');
+    const G_LEN = 251;
 
     methods.forEach((btn, i) => {
         btn.addEventListener('click', () => {
@@ -115,31 +126,131 @@
 
     document.getElementById('clear-text').addEventListener('click', () => { messageText.value = ''; });
 
-    analyzeBtn.addEventListener('click', () => {
-        let content = '';
-        const active = document.querySelector('.input-method-btn.active').dataset.method;
-        if (active === 'text') content = messageText.value;
-        else if (active === 'url') content = urlInput.value;
-        if (!content.trim()) { alert('Please enter some content to analyze.'); return; }
-        resultsArea.hidden = false;
-        const risk = Math.min(100, Math.floor(Math.random() * 80) + 10);
-        document.getElementById('gauge-value').textContent = risk;
-        document.getElementById('gauge-fill').style.strokeDashoffset = 251 - (251 * risk / 100);
-        document.getElementById('risk-label').textContent = risk >= 70 ? 'High Risk' : risk >= 40 ? 'Medium Risk' : 'Low Risk';
-        document.getElementById('why-text').textContent = risk >= 70
-            ? 'The sender is asking for gift cards. Real banks never do this.'
-            : risk >= 40
-            ? 'The message uses urgency language. Legitimate organizations rarely pressure you to act immediately.'
-            : 'This message does not show common scam indicators.';
-        document.getElementById('results-area').classList.toggle('high-risk', risk >= 70);
+    const screenshotInput = document.getElementById('screenshot-input');
+    const ocrStatus = document.getElementById('ocr-status');
+    const ocrPreviewWrap = document.getElementById('ocr-preview-wrap');
+    const ocrPreview = document.getElementById('ocr-preview');
+
+    screenshotInput.addEventListener('change', async function() {
+        const file = this.files && this.files[0];
+        if (!file) return;
+        ocrStatus.textContent = 'Reading image…';
+        ocrPreviewWrap.hidden = false;
+        ocrPreview.src = URL.createObjectURL(file);
+        try {
+            const r = await Tesseract.recognize(file, 'eng', { logger: function() {} });
+            const txt = (r.data && r.data.text) ? r.data.text.trim() : '';
+            messageText.value = txt;
+            ocrStatus.textContent = txt ? 'Text copied to the Text tab—switch there or tap Analyze.' : 'No text found. Try a clearer photo.';
+        } catch (e) {
+            ocrStatus.textContent = 'Could not read the image. Try another photo.';
+        }
     });
 
+    const recordBtn = document.getElementById('record-btn');
+    const recordBtnLabel = document.getElementById('record-btn-label');
+    let recognition = null;
+    let listening = false;
+
+    function setupVoice() {
+        const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if (!SR) {
+            document.getElementById('voice-hint').textContent = 'Voice is not supported in this browser. Use Chrome or Edge, or type in the Text tab.';
+            recordBtn.disabled = true;
+            return;
+        }
+        recognition = new SR();
+        recognition.lang = 'en-US';
+        recognition.interimResults = true;
+        recognition.continuous = true;
+        recognition.onresult = function(ev) {
+            let finalText = '';
+            for (let i = 0; i < ev.results.length; i++) {
+                if (ev.results[i].isFinal) finalText += ev.results[i][0].transcript;
+            }
+            if (finalText) voiceTranscript.value = (voiceTranscript.value + ' ' + finalText).trim();
+        };
+        recognition.onerror = function() {
+            recordBtnLabel.textContent = 'Record & Analyze';
+            recordBtn.setAttribute('aria-pressed', 'false');
+            listening = false;
+        };
+    }
+    setupVoice();
+
+    recordBtn.addEventListener('click', function() {
+        if (!recognition) return;
+        if (listening) {
+            recognition.stop();
+            listening = false;
+            recordBtnLabel.textContent = 'Record & Analyze';
+            recordBtn.setAttribute('aria-pressed', 'false');
+            messageText.value = voiceTranscript.value.trim();
+            return;
+        }
+        voiceTranscript.value = '';
+        messageText.value = '';
+        try {
+            recognition.start();
+            listening = true;
+            recordBtnLabel.textContent = 'Stop & Save';
+            recordBtn.setAttribute('aria-pressed', 'true');
+        } catch (e) {
+            document.getElementById('voice-hint').textContent = 'Could not start microphone. Check permissions and use Chrome or Edge.';
+        }
+    });
+
+    function analyzeContent() {
+        const active = document.querySelector('.input-method-btn.active').dataset.method;
+        let content = '';
+        if (active === 'text') content = messageText.value;
+        else if (active === 'url') {
+            const u = (urlInput.value || '').trim();
+            if (!u) { alert('Please enter a URL to scan.'); return; }
+            const urlRes = window.SafeGuardAnalyzer.analyzeUrl(u);
+            showResults(urlRes.score, urlRes.reasons);
+            return;
+        }
+        else if (active === 'voice') content = voiceTranscript.value.trim() || messageText.value;
+        else if (active === 'screenshot') content = messageText.value;
+
+        if (!content.trim()) {
+            alert('Paste text, speak a message, or upload a screenshot first.');
+            return;
+        }
+        const res = window.SafeGuardAnalyzer.analyzeText(content);
+        showResults(res.score, res.reasons);
+    }
+
+    function showResults(risk, reasonList) {
+        resultsArea.hidden = false;
+        document.getElementById('gauge-value').textContent = risk;
+        gaugeFill.style.strokeDashoffset = G_LEN - (G_LEN * risk / 100);
+        document.getElementById('risk-label').textContent = risk >= 70 ? 'High Risk' : risk >= 40 ? 'Medium Risk' : 'Low Risk';
+        gaugeFill.style.stroke = risk >= 70 ? 'var(--color-danger)' : risk >= 40 ? 'var(--color-warning)' : 'var(--color-success)';
+
+        const ul = document.getElementById('why-list');
+        ul.innerHTML = '';
+        for (let i = 0; i < reasonList.length; i++) {
+            const li = document.createElement('li');
+            li.textContent = reasonList[i];
+            ul.appendChild(li);
+        }
+
+        const ra = document.getElementById('results-area');
+        ra.classList.remove('high-risk', 'medium-risk');
+        if (risk >= 70) ra.classList.add('high-risk');
+        else if (risk >= 40) ra.classList.add('medium-risk');
+    }
+
+    analyzeBtn.addEventListener('click', analyzeContent);
+
     document.getElementById('read-to-me-btn').addEventListener('click', () => {
-        const msg = new SpeechSynthesisUtterance(
-            document.getElementById('risk-label').textContent + '. ' + document.getElementById('why-text').textContent
-        );
+        const label = document.getElementById('risk-label').textContent;
+        const items = Array.from(document.querySelectorAll('#why-list li')).map(function(li) { return li.textContent; });
+        const msg = new SpeechSynthesisUtterance(label + '. ' + items.join(' '));
         msg.rate = 0.9;
-        msg.pitch = 0.9;
+        msg.pitch = 0.85;
         window.speechSynthesis.speak(msg);
     });
 })();

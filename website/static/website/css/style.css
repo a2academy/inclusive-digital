@@ -3,12 +3,12 @@
    Design: Calm & Secure palette, WCAG AAA, senior-friendly */
 
 :root {
-    /* Proposal: Calm & Secure palette */
+    /* Proposal: Calm & Secure palette + warmth */
     --color-primary: #1A237E;
     --color-success: #2E7D32;
     --color-warning: #FFC107;
     --color-danger: #D32F2F;
-    --color-bg: #f5f7fa;
+    --color-bg: #eef2f8;
     --color-bg-elevated: #ffffff;
     --color-bg-card: #ffffff;
     --color-text: #1a1a2e;
@@ -16,8 +16,10 @@
     --color-accent: #1A237E;
     --color-accent-hover: #283593;
     --color-accent-soft: rgba(26, 35, 126, 0.12);
-    --color-border: #e2e8f0;
-    --font-display: 'Roboto', system-ui, sans-serif;
+    --color-border: #d8dee9;
+    --color-warm: #e8f4ec;
+    --color-warm-accent: rgba(46, 125, 50, 0.08);
+    --font-display: 'Roboto Slab', 'Roboto', Georgia, serif;
     --font-body: 'Roboto', system-ui, sans-serif;
     --font-size-base: 18px;
     --radius: 12px;
@@ -26,14 +28,35 @@
     --contrast-ratio: 7;
 }
 
-/* Senior Mode: single-column, high-contrast, larger targets */
+/* Senior Mode: larger text first (not just letter-spacing), high-contrast, big tap targets */
 body.senior-mode {
+    --font-size-base: 24px;
     --color-bg: #ffffff;
     --color-bg-elevated: #ffffff;
     --color-bg-card: #f8f9fa;
     --color-text: #000000;
     --color-text-muted: #1a1a1a;
     --color-border: #000000;
+}
+
+body.senior-mode {
+    font-size: var(--font-size-base);
+    letter-spacing: normal;
+    line-height: 1.7;
+}
+
+body.senior-mode h1,
+body.senior-mode .hero-title {
+    font-size: clamp(2.25rem, 5vw, 3.25rem);
+}
+
+body.senior-mode h2,
+body.senior-mode .section-title {
+    font-size: 1.75rem;
+}
+
+body.senior-mode .nav-links a {
+    font-size: 1.125rem;
 }
 
 body.senior-mode .container,
@@ -68,8 +91,15 @@ body {
     line-height: 1.65;
     letter-spacing: 0.02em;
     color: var(--color-text);
-    background: var(--color-bg);
+    background:
+        radial-gradient(ellipse 120% 80% at 100% 0%, rgba(26, 35, 126, 0.09) 0%, transparent 50%),
+        radial-gradient(ellipse 100% 60% at 0% 100%, rgba(46, 125, 50, 0.1) 0%, transparent 45%),
+        linear-gradient(180deg, #f0f4fc 0%, var(--color-bg) 40%, #e8edf5 100%);
     -webkit-font-smoothing: antialiased;
+}
+
+main {
+    padding-bottom: 5.5rem;
 }
 
 /* Senior Mode Toggle */
@@ -306,7 +336,7 @@ body {
     background: var(--color-bg-card);
     border-radius: var(--radius);
     border-left: 4px solid var(--color-warning);
-    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    box-shadow: 0 4px 14px rgba(26, 35, 126, 0.06);
 }
 
 .problem-list li strong {
@@ -328,7 +358,8 @@ body {
     margin-bottom: 0.75rem;
     background: var(--color-bg-card);
     border-radius: var(--radius);
-    border-left: 4px solid var(--color-accent);
+    border-left: 4px solid var(--color-success);
+    box-shadow: 0 4px 14px rgba(46, 125, 50, 0.08);
 }
 
 .solution-icon {
@@ -444,6 +475,47 @@ body {
 .footer-meta {
     font-size: 0.8125rem !important;
     opacity: 0.8;
+}
+
+/* Floating emergency — bottom left, high visibility */
+.floating-emergency-help {
+    position: fixed;
+    bottom: 1.25rem;
+    left: 1.25rem;
+    z-index: 300;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-width: 4.5rem;
+    min-height: 4.5rem;
+    padding: 0.65rem 1rem;
+    background: linear-gradient(145deg, #c62828 0%, #b71c1c 100%);
+    color: #fff !important;
+    text-decoration: none;
+    border-radius: 14px;
+    box-shadow: 0 6px 24px rgba(198, 40, 40, 0.45), 0 2px 8px rgba(0, 0, 0, 0.15);
+    font-weight: 700;
+    font-size: 0.8125rem;
+    line-height: 1.2;
+    transition: transform 0.15s, box-shadow 0.15s;
+    border: 2px solid rgba(255, 255, 255, 0.35);
+}
+
+.floating-emergency-help:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 28px rgba(198, 40, 40, 0.55);
+}
+
+.floating-emergency-icon {
+    font-size: 1.75rem;
+    line-height: 1;
+    margin-bottom: 0.15rem;
+}
+
+.floating-emergency-text {
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
 }
 
 /* Responsive */

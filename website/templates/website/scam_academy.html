@@ -76,9 +76,19 @@
     let score = 0;
     let answers = [];
 
+    const CAT_LABELS = {
+        phishing: 'Phishing Emails',
+        sms: 'SMS Scams',
+        government: 'Government Impersonation',
+        prize: 'Prize & Lottery',
+        banking: 'Banking Fraud',
+        romance: 'Romance Scams'
+    };
+
     function renderQuestion() {
         const q = data[current];
-        questionEl.innerHTML = `<p class="question-text">${q.question}</p>`;
+        const cat = CAT_LABELS[q.category] || q.category;
+        questionEl.innerHTML = `<p class="question-category">${cat}</p><p class="question-text">${q.question}</p>`;
         optionsEl.innerHTML = q.options.map((opt, i) =>
             `<button type="button" class="quiz-option" data-correct="${opt.correct}" data-index="${i}">
                 <span class="option-letter">${opt.letter}</span>
@@ -100,6 +110,11 @@
         answers[current] = correct;
         if (correct) score++;
         btn.classList.add(correct ? 'correct' : 'wrong');
+        if (!correct) {
+            optionsEl.querySelectorAll('.quiz-option').forEach(b => {
+                if (b.dataset.correct === 'True' || b.dataset.correct === 'true') b.classList.add('correct');
+            });
+        }
         optionsEl.querySelectorAll('.quiz-option').forEach(b => b.disabled = true);
         nextBtn.hidden = false;
     }
@@ -127,8 +142,7 @@
     });
 
     document.getElementById('retry-btn').addEventListener('click', () => {
-        quizResults.hidden = true;
-        quizStart.hidden = false;
+        location.reload();
     });
 })();
 </script>
